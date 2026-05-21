@@ -16,7 +16,6 @@ const auth = useAuth()
     </header>
 
     <div class="max-w-3xl grid gap-6">
-      <!-- Personal Info -->
       <div class="card p-6 border-dark-700">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <User class="w-5 h-5 text-gold-500" />
@@ -43,7 +42,6 @@ const auth = useAuth()
         </div>
       </div>
 
-      <!-- Security -->
       <div class="card p-6 border-dark-700 opacity-60">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Shield class="w-5 h-5 text-gold-500" />
@@ -67,7 +65,6 @@ const auth = useAuth()
         </div>
       </div>
 
-      <!-- Notifications -->
       <div class="card p-6 border-dark-700 opacity-60">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Bell class="w-5 h-5 text-gold-500" />
