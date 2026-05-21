@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Coins, UserPlus, Loader2 } from '@lucide/vue'
+import { ref, computed } from 'vue'
+import { Coins, UserPlus, Loader2, Eye, EyeOff } from '@lucide/vue'
 
 definePageMeta({
   layout: 'default'
@@ -11,9 +11,25 @@ const name = ref('')
 const email = ref('')
 const password = ref('')
 const address = ref('')
+const showPassword = ref(false)
 const loading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+
+const passwordStrength = computed(() => {
+  const pw = password.value
+  if (!pw) return { score: 0, label: '', color: 'bg-dark-700' }
+  
+  let score = 0
+  if (pw.length >= 8) score += 1
+  if (/[A-Z]/.test(pw)) score += 1
+  if (/[0-9]/.test(pw)) score += 1
+  if (/[^A-Za-z0-9]/.test(pw)) score += 1
+
+  if (score <= 1) return { score, label: 'Lemah', color: 'bg-red-500', textColor: 'text-red-500' }
+  if (score <= 2) return { score, label: 'Sedang', color: 'bg-yellow-500', textColor: 'text-yellow-500' }
+  return { score, label: 'Kuat', color: 'bg-green-500', textColor: 'text-green-500' }
+})
 
 const handleRegister = async () => {
   loading.value = true
@@ -100,17 +116,34 @@ const handleRegister = async () => {
             <label for="password" class="block text-sm font-medium text-gray-300">
               Kata Sandi
             </label>
-            <div class="mt-1">
+            <div class="mt-1 relative">
               <input 
                 id="password" 
                 name="password" 
-                type="password" 
+                :type="showPassword ? 'text' : 'password'" 
                 autocomplete="new-password" 
                 required 
                 v-model="password"
-                class="input-field" 
+                class="input-field pr-10" 
                 placeholder="••••••••"
               />
+              <button 
+                type="button" 
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gold-500"
+                @click="showPassword = !showPassword"
+              >
+                <Eye v-if="!showPassword" class="h-5 w-5" />
+                <EyeOff v-else class="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div v-if="password" class="mt-2 flex items-center gap-2">
+              <div class="flex-1 h-1.5 flex gap-1 rounded-full overflow-hidden">
+                <div class="h-full flex-1 transition-colors duration-300" :class="passwordStrength.score >= 1 ? passwordStrength.color : 'bg-dark-700'"></div>
+                <div class="h-full flex-1 transition-colors duration-300" :class="passwordStrength.score >= 2 ? passwordStrength.color : 'bg-dark-700'"></div>
+                <div class="h-full flex-1 transition-colors duration-300" :class="passwordStrength.score >= 3 ? passwordStrength.color : 'bg-dark-700'"></div>
+              </div>
+              <span class="text-xs font-medium w-12 text-right" :class="passwordStrength.textColor">{{ passwordStrength.label }}</span>
             </div>
           </div>
 

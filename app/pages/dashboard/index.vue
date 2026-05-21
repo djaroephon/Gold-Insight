@@ -12,7 +12,7 @@ const { formatPrice } = useCurrency()
 <template>
   <div>
     <header class="mb-8">
-      <h1 class="text-3xl font-bold text-white mb-2">Selamat datang kembali, {{ auth.user.value?.name || 'Investor' }}</h1>
+      <h1 class="text-3xl font-bold text-white mb-2">Selamat datang kembali, {{ auth.user.value?.user_metadata?.name || auth.user.value?.name || 'Investor' }}</h1>
       <p class="text-gray-400">Berikut adalah ringkasan Pasar Emas harianmu.</p>
     </header>
 

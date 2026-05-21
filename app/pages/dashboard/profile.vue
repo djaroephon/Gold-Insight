@@ -26,7 +26,7 @@ const auth = useAuth()
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-400 mb-1">Nama Lengkap</label>
-              <input type="text" class="input-field bg-dark-900 border-dark-700" :value="auth.user.value?.name" disabled />
+              <input type="text" class="input-field bg-dark-900 border-dark-700" :value="auth.user.value?.user_metadata?.name || auth.user.value?.name" disabled />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-400 mb-1">Alamat Email</label>
@@ -47,15 +47,7 @@ const auth = useAuth()
           <Shield class="w-5 h-5 text-gold-500" />
           Pengaturan Keamanan
         </h3>
-        
-        <div class="flex items-center justify-between py-3 border-b border-dark-700">
-          <div>
-            <p class="font-medium text-white">Otentikasi Dua Faktor (2FA)</p>
-            <p class="text-sm text-gray-400">Tambahkan lapisan keamanan ekstra ke akun kamu.</p>
-          </div>
-          <button class="btn-outline text-sm py-1.5 px-3 opacity-50 cursor-not-allowed">Aktifkan</button>
-        </div>
-        
+           
         <div class="flex items-center justify-between py-3">
           <div>
             <p class="font-medium text-white">Ubah Kata Sandi</p>
@@ -65,7 +57,7 @@ const auth = useAuth()
         </div>
       </div>
 
-      <div class="card p-6 border-dark-700 opacity-60">
+      <!-- <div class="card p-6 border-dark-700 opacity-60">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Bell class="w-5 h-5 text-gold-500" />
           Notifikasi
@@ -87,7 +79,7 @@ const auth = useAuth()
             </div>
           </label>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
