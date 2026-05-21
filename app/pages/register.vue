@@ -1,33 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Coins, LogIn, Loader2 } from '@lucide/vue'
+import { Coins, UserPlus, Loader2 } from '@lucide/vue'
 
 definePageMeta({
   layout: 'default'
 })
 
 const auth = useAuth()
+const name = ref('')
 const email = ref('')
 const password = ref('')
+const address = ref('')
 const loading = ref(false)
-
 const errorMessage = ref('')
+const successMessage = ref('')
 
-const handleLogin = async () => {
+const handleRegister = async () => {
   loading.value = true
   errorMessage.value = ''
+  successMessage.value = ''
   
-  const result = await auth.login({
+  const result = await auth.register({
+    name: name.value,
     email: email.value,
-    password: password.value
+    password: password.value,
+    address: address.value
   })
   
   loading.value = false
   
   if (result.success) {
-    navigateTo('/dashboard')
+    successMessage.value = 'Registrasi berhasil! Mengalihkan ke halaman login...'
+    setTimeout(() => {
+      navigateTo('/login')
+    }, 2000)
   } else {
-    errorMessage.value = result.message || 'Login gagal, periksa kembali email dan password.'
+    errorMessage.value = result.message || 'Registrasi gagal, periksa kembali data Anda.'
   }
 }
 </script>
@@ -43,16 +51,33 @@ const handleLogin = async () => {
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
-        Selamat Datang Kembali
+        Daftar Akun Baru
       </h2>
       <p class="mt-2 text-center text-sm text-gray-400">
-        Masuk untuk mengakses dasbor dan rekomendasi AI kamu.
+        Bergabunglah untuk mendapatkan insight emas terbaik.
       </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
       <div class="bg-dark-800 py-8 px-4 shadow-xl sm:rounded-xl sm:px-10 border border-dark-700">
-        <form class="space-y-6" @submit.prevent="handleLogin">
+        <form class="space-y-6" @submit.prevent="handleRegister">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-300">
+              Nama Lengkap
+            </label>
+            <div class="mt-1">
+              <input 
+                id="name" 
+                name="name" 
+                type="text" 
+                required 
+                v-model="name"
+                class="input-field" 
+                placeholder="Nama Anda"
+              />
+            </div>
+          </div>
+
           <div>
             <label for="email" class="block text-sm font-medium text-gray-300">
               Alamat Email
@@ -80,7 +105,7 @@ const handleLogin = async () => {
                 id="password" 
                 name="password" 
                 type="password" 
-                autocomplete="current-password" 
+                autocomplete="new-password" 
                 required 
                 v-model="password"
                 class="input-field" 
@@ -89,18 +114,19 @@ const handleLogin = async () => {
             </div>
           </div>
 
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-gold-500 focus:ring-gold-500 border-gray-700 rounded bg-dark-900" />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-400">
-                Ingat saya
-              </label>
-            </div>
-
-            <div class="text-sm">
-              <a href="#" class="font-medium text-gold-500 hover:text-gold-400">
-                Lupa kata sandi?
-              </a>
+          <div>
+            <label for="address" class="block text-sm font-medium text-gray-300">
+              Alamat
+            </label>
+            <div class="mt-1">
+              <textarea 
+                id="address" 
+                name="address" 
+                required 
+                v-model="address"
+                class="input-field min-h-[80px] resize-y" 
+                placeholder="Alamat lengkap"
+              ></textarea>
             </div>
           </div>
 
@@ -115,8 +141,8 @@ const handleLogin = async () => {
                 Memproses...
               </template>
               <template v-else>
-                <LogIn class="w-5 h-5 mr-2" />
-                Masuk
+                <UserPlus class="w-5 h-5 mr-2" />
+                Daftar
               </template>
             </button>
           </div>
@@ -124,13 +150,17 @@ const handleLogin = async () => {
           <div v-if="errorMessage" class="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm text-center">
             {{ errorMessage }}
           </div>
+          
+          <div v-if="successMessage" class="p-3 bg-green-500/10 border border-green-500/50 rounded-lg text-green-500 text-sm text-center">
+            {{ successMessage }}
+          </div>
         </form>
 
         <div class="mt-6 text-center">
           <p class="text-sm text-gray-400">
-            Belum punya akun?
-            <NuxtLink to="/register" class="font-medium text-gold-500 hover:text-gold-400">
-              Daftar Sekarang
+            Sudah punya akun?
+            <NuxtLink to="/login" class="font-medium text-gold-500 hover:text-gold-400">
+              Masuk
             </NuxtLink>
           </p>
         </div>

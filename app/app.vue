@@ -2,9 +2,11 @@
 import { onMounted } from 'vue'
 
 const { fetchExchangeRate } = useCurrency()
+const auth = useAuth()
 
-onMounted(() => {
+onMounted(async () => {
   fetchExchangeRate()
+  await auth.fetchUser()
 })
 </script>
 
