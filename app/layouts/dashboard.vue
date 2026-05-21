@@ -5,7 +5,7 @@ const auth = useAuth()
 const { currency, toggleCurrency } = useCurrency()
 
 onMounted(() => {
-  if (!auth.isAuthenticated.value) {
+  if (!auth.token.value) {
     navigateTo('/login')
   }
 })

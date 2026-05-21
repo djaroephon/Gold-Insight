@@ -113,6 +113,10 @@ const chartOptions = computed(() => {
           color: '#9ca3af',
           callback: function(value: any) {
             if (currency.value === 'IDR') {
+               // Gunakan toFixed(2) atau format ribuan agar label tidak kembar saat rentangnya kecil (seperti pada satuan gram)
+               if (weightUnit.value === 'gram') {
+                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(value)
+               }
                return 'Rp ' + (value / 1000000).toFixed(1) + ' Jt'
             }
             return '$' + Number(value).toFixed(weightUnit.value === 'gram' ? 2 : 0);
@@ -134,7 +138,7 @@ const chartOptions = computed(() => {
         borderWidth: 1,
         callbacks: {
           label: function(context: any) {
-             const rawValue = visiblePredictions.value[context.dataIndex].value
+             const rawValue = visiblePredictions.value[context.dataIndex]?.value || 0
              const adjustedRaw = adjustForWeight(rawValue)
              return 'Harga: ' + formatPrice(adjustedRaw) + (weightUnit.value === 'gram' ? ' / g' : ' / oz');
           }
