@@ -13,7 +13,6 @@ const loading = ref(false)
 
 const handleLogin = async () => {
   loading.value = true
-  // Mock login process
   await auth.login()
   loading.value = false
   navigateTo('/dashboard')
@@ -22,7 +21,6 @@ const handleLogin = async () => {
 
 <template>
   <div class="min-h-[calc(100vh-140px)] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-    <!-- Background element -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-96 bg-gold-500/10 rounded-full blur-[100px] pointer-events-none"></div>
     
     <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">

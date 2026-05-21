@@ -37,6 +37,7 @@ const error = ref<string | null>(null)
 const { currency, formatPrice, convertPrice } = useCurrency()
 
 const weightUnit = ref<'oz' | 'gram'>('oz')
+const selectedDays = ref<number>(7)
 
 const fetchPredictions = async () => {
   try {
@@ -44,6 +45,7 @@ const fetchPredictions = async () => {
     const response = await axios.get('https://render-capstone-project.onrender.com/predict-gold')
     if (response.data.status === 'success') {
       predictions.value = response.data.predictions_usd
+      selectedDays.value = response.data.predictions_usd.length
     } else {
       error.value = 'Gagal memuat data prediksi.'
     }
@@ -62,9 +64,13 @@ const adjustForWeight = (pricePerOz: number) => {
   return weightUnit.value === 'gram' ? pricePerOz / 31.1035 : pricePerOz
 }
 
+const visiblePredictions = computed(() => {
+  return predictions.value.slice(0, selectedDays.value)
+})
+
 const chartData = computed(() => {
   return {
-    labels: predictions.value.map(p => p.date),
+    labels: visiblePredictions.value.map(p => p.date),
     datasets: [
       {
         label: `Prediksi Harga Emas (${currency.value}/${weightUnit.value === 'oz' ? 'oz' : 'g'})`,
@@ -77,7 +83,7 @@ const chartData = computed(() => {
         borderWidth: 2,
         tension: 0.4,
         fill: true,
-        data: predictions.value.map(p => {
+        data: visiblePredictions.value.map(p => {
           const converted = convertPrice(p.value)
           return adjustForWeight(converted)
         })
@@ -107,12 +113,9 @@ const chartOptions = computed(() => {
           color: '#9ca3af',
           callback: function(value: any) {
             if (currency.value === 'IDR') {
-               if (weightUnit.value === 'gram') {
-                  return 'Rp ' + (value / 1000).toFixed(0) + ' Rb'
-               }
                return 'Rp ' + (value / 1000000).toFixed(1) + ' Jt'
             }
-            return '$' + value;
+            return '$' + Number(value).toFixed(weightUnit.value === 'gram' ? 2 : 0);
           }
         }
       }
@@ -131,7 +134,7 @@ const chartOptions = computed(() => {
         borderWidth: 1,
         callbacks: {
           label: function(context: any) {
-             const rawValue = predictions.value[context.dataIndex].value
+             const rawValue = visiblePredictions.value[context.dataIndex].value
              const adjustedRaw = adjustForWeight(rawValue)
              return 'Harga: ' + formatPrice(adjustedRaw) + (weightUnit.value === 'gram' ? ' / g' : ' / oz');
           }
@@ -145,27 +148,36 @@ const chartOptions = computed(() => {
 <template>
   <div class="card p-6 min-h-[400px] flex flex-col relative border-dark-700">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-      <h3 class="text-xl font-bold text-white flex items-center gap-2">
+      <h3 class="text-xl font-bold text-white flex items-center gap-2 shrink-0">
         <div class="w-2 h-6 bg-gold-500 rounded-full"></div>
         Grafik Prediksi Harga Emas
       </h3>
       
-      <!-- Toggle Satuan Berat -->
-      <div class="flex bg-dark-800 rounded-lg p-1 border border-dark-700">
-        <button 
-          @click="weightUnit = 'oz'"
-          class="px-4 py-1.5 text-xs font-medium rounded-md transition-colors"
-          :class="weightUnit === 'oz' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
-        >
-          Troy Oz
-        </button>
-        <button 
-          @click="weightUnit = 'gram'"
-          class="px-4 py-1.5 text-xs font-medium rounded-md transition-colors"
-          :class="weightUnit === 'gram' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
-        >
-          Gram
-        </button>
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Slider Hari Prediksi -->
+        <div v-if="predictions.length > 0" class="flex items-center gap-3 bg-dark-800 rounded-lg px-3 py-1.5 border border-dark-700">
+          <label class="text-xs text-gray-400 font-medium whitespace-nowrap">Tampilkan:</label>
+          <input type="range" v-model="selectedDays" min="1" :max="predictions.length" class="w-20 accent-gold-500" />
+          <span class="text-xs text-gold-500 font-bold w-12">{{ selectedDays }} Hari</span>
+        </div>
+
+        <!-- Toggle Satuan Berat -->
+        <div class="flex bg-dark-800 rounded-lg p-1 border border-dark-700">
+          <button 
+            @click="weightUnit = 'oz'"
+            class="px-4 py-1.5 text-xs font-medium rounded-md transition-colors"
+            :class="weightUnit === 'oz' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
+          >
+            Troy Oz
+          </button>
+          <button 
+            @click="weightUnit = 'gram'"
+            class="px-4 py-1.5 text-xs font-medium rounded-md transition-colors"
+            :class="weightUnit === 'gram' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
+          >
+            Gram
+          </button>
+        </div>
       </div>
     </div>
     

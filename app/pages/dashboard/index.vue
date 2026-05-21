@@ -16,7 +16,6 @@ const { formatPrice } = useCurrency()
       <p class="text-gray-400">Berikut adalah ringkasan Pasar Emas harianmu.</p>
     </header>
 
-    <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div class="card p-6 border-l-4 border-l-gold-500">
         <div class="flex justify-between items-start">
@@ -71,7 +70,6 @@ const { formatPrice } = useCurrency()
       </div>
     </div>
 
-    <!-- Main Chart -->
     <div class="mb-8">
       <PredictionChart />
     </div>
