@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ArrowRight, BarChart3, Calculator, BrainCircuit, Globe, Link, Mail } from '@lucide/vue'
+import { ArrowRight, BarChart3, Calculator, BrainCircuit, Globe } from '@lucide/vue'
+import vina from '../assets/images/members/vina.jpeg'
+import nabil from '../assets/images/members/nabil.jpeg'
+import vita from '../assets/images/members/vita.jpeg'
+import anggi from '../assets/images/members/anggi.jpeg'
+import djohan from '../assets/images/members/johan.jpeg'
+import sabia from '../assets/images/members/sabia.jpeg'
 
 definePageMeta({
   layout: 'default'
@@ -7,12 +13,12 @@ definePageMeta({
 
 // Data Tim 
 const teamMembers = [
-  { id: 1, name: 'Anggota 1', role: 'Data Scientist', univ: 'Universitas ', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&q=80' },
-  { id: 2, name: 'Anggota 2', role: 'AI Engineer', univ: 'Universitas', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80' },
-  { id: 3, name: 'Anggota 3', role: 'Fullstack Developer', univ: 'Universitas', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=256&q=80' },
-  { id: 4, name: 'Anggota 4', role: 'Fullstack Developer', univ: 'Universitas', image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=256&q=80' },
-  { id: 5, name: 'Anggota 5', role: 'Data Scientist', univ: 'Universitas', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80' },
-  { id: 6, name: 'Anggota 6', role: 'AI Engineer', univ: 'Universitas', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&q=80' }
+  { id: 1, name: 'Vina Widiasari', role: 'Data Scientist', univ: 'Universitas Jenderal Soedirman', image: vina, website: 'https://github.com/vinawidiasari', instagram: 'https://www.instagram.com/vnn.aaa/', linkedin: 'www.linkedin.com/in/vina-widiasari' },
+  { id: 2, name: 'Djaroephon Djohan Syuhada', role: 'Fullstack Developer', univ: 'Universitas Ubudiyah Indonesia', image: djohan, website: 'https://zettia.my.id/', instagram: 'https://www.instagram.com/djaroephon.1746/', linkedin: 'www.linkedin.com/in/djaroephon-djohan-syuhada' },
+  { id: 3, name: 'Nurvita Win Pratiwi', role: 'AI Engineer', univ: 'Universitas Jenderal Soedirman', image: vita, website: '#', instagram: 'https://www.instagram.com/nurvitawpr?igsh=MWNoZTY3OHluamtkZg==', linkedin: 'https://www.linkedin.com/in/nurvita-win-pratiwi-579b082b3 ' },
+  { id: 4, name: 'Sabia Putri Aulia', role: 'Data Scientist', univ: 'Universitas Jenderal Soedirman', image: sabia, website: 'https://github.com/sabibu12', instagram: 'https://www.instagram.com/_ptrs95?igsh=cDZvcTlveDdhenQ3', linkedin: 'https://www.linkedin.com/in/sabia-putri-aulia-b8615a3ab?' },
+  { id: 5, name: 'Nabil Aditia Putra', role: 'Fullstack Developer', univ: 'Universitas Serambi Mekkah', image: nabil, website: 'https://nvitech.meukarya.my.id/', instagram:'https://www.instagram.com/nabildtya', linkedin: 'https://www.linkedin.com/in/nabiladitiaputra/' },
+  { id: 6, name: 'Anggi Nur Pratama', role: 'AI Engineer', univ: 'Universitas Jenderal Soedirman', image: anggi, website: 'https://github.com/hellohopes', instagram: 'https://www.instagram.com/anggipratmaa', linkedin: 'https://www.linkedin.com/in/anggi-nur-pratama/' }
 ]
 </script>
 
@@ -49,9 +55,9 @@ const teamMembers = [
 
           <div class="relative hidden lg:block">
             <div class="absolute inset-0 bg-gold-500 rounded-full blur-[120px] opacity-20 animate-pulse" style="animation-duration: 4s;"></div>
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-dark-700/50 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-dark-700/50 ">
               <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent z-10"></div>
-              <img src="@/assets/images/dash.png" alt="Gold Investment Dashboard" class="w-full h-[500px] object-cover scale-105 hover:scale-100 transition-transform duration-700" />
+              <img src="@/assets/images/gold_alt.png" alt="Gold Investment Dashboard" class="w-full h-[500px] object-cover scale-105" />
             </div>  
           </div>
         </div>
@@ -153,9 +159,13 @@ const teamMembers = [
             <p class="text-sm text-gray-400 mb-6 flex-1">{{ member.univ }}</p>
             
             <div class="flex gap-4 mt-auto pt-4 border-t border-dark-700/50 w-full justify-center">
-              <a href="#" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm"><Globe class="w-4 h-4" /></a>
-              <a href="#" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm"><Link class="w-4 h-4" /></a>
-              <a href="#" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm"><Mail class="w-4 h-4" /></a>
+              <a :href="member.website" target="_blank" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm"><Globe class="w-4 h-4" /></a>
+              <a :href="member.instagram" target="_blank" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              </a>
+              <a :href="member.linkedin" target="_blank" class="p-2 rounded-full bg-dark-700 text-gray-400 hover:text-white hover:bg-gold-500 transition-colors shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+              </a>
             </div>
           </div>
         </div>
