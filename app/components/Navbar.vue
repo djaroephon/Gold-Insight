@@ -13,11 +13,9 @@ const handleLogout = () => {
 <template>
   <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-dark-900/80 border-b border-dark-700 shadow-sm">
     <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-      <NuxtLink to="/" class="flex items-center gap-2 group">
-        <div class="p-2 bg-gold-500/10 rounded-lg group-hover:bg-gold-500/20 transition-colors">
-          <Coins class="w-6 h-6 text-gold-500" />
-        </div>
-        <span class="text-xl font-bold bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent">
+      <NuxtLink to="/" class="flex items-center group py-2">
+        <img src="@/assets/images/logo.png" alt="Gold Insight Logo" class="h-12 sm:h-20 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,215,0,0.2)] transition-transform duration-300 group-hover:scale-105 -mr-4 sm:-mr-5" />
+        <span class="text-xl font-bold bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent hidden sm:block relative z-10">
           Gold Insight
         </span>
       </NuxtLink>
