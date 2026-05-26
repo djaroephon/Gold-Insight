@@ -21,7 +21,7 @@ definePageMeta({
         <ul class="space-y-4 text-gray-400 text-sm">
           <li class="flex gap-3">
             <span class="font-bold text-green-400 w-16">BELI</span>
-            <p>AI memprediksi momentum kenaikan yang kuat baik dalam proyeksi jangka pendek (hari berikutnya) maupun jangka panjang (7 hari). Ini menunjukkan titik masuk yang menguntungkan untuk memaksimalkan potensi keuntungan.</p>
+            <p>AI memprediksi momentum kenaikan yang kuat baik dalam proyeksi jangka pendek (hari berikutnya) maupun jangka panjang (mingguan / 4 minggu). Ini menunjukkan titik masuk yang menguntungkan untuk memaksimalkan potensi keuntungan.</p>
           </li>
           <li class="flex gap-3">
             <span class="font-bold text-gold-500 w-16">TAHAN</span>

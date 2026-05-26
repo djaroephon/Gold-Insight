@@ -37,15 +37,21 @@ const error = ref<string | null>(null)
 const { currency, formatPrice, convertPrice } = useCurrency()
 
 const weightUnit = ref<'oz' | 'gram'>('oz')
+const predictionMode = ref<'daily' | 'weekly'>('daily')
 const selectedDays = ref<number>(7)
 
 const fetchPredictions = async () => {
   try {
     loading.value = true
-    const response = await axios.get('https://render-capstone-project.onrender.com/predict-gold')
+    error.value = null
+    const endpoint = predictionMode.value === 'daily'
+      ? 'https://render-capstone-project.onrender.com/predict-gold-daily'
+      : 'https://render-capstone-project.onrender.com/predict-gold-weekly'
+      
+    const response = await axios.get(endpoint)
     if (response.data.status === 'success') {
-      predictions.value = response.data.predictions_usd
-      selectedDays.value = response.data.predictions_usd.length
+      predictions.value = response.data.predictions
+      selectedDays.value = response.data.predictions.length
     } else {
       error.value = 'Gagal memuat data prediksi.'
     }
@@ -54,6 +60,11 @@ const fetchPredictions = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const setPredictionMode = (mode: 'daily' | 'weekly') => {
+  predictionMode.value = mode
+  fetchPredictions()
 }
 
 onMounted(() => {
@@ -158,11 +169,29 @@ const chartOptions = computed(() => {
       </h3>
       
       <div class="flex flex-wrap items-center gap-3">
-        <!-- Slider Hari Prediksi -->
+        <!-- Toggle Mode Prediksi (Harian / Mingguan) -->
+        <div class="flex bg-dark-800 rounded-lg p-1 border border-dark-700">
+          <button 
+            @click="setPredictionMode('daily')"
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+            :class="predictionMode === 'daily' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
+          >
+            Harian (7 Hari)
+          </button>
+          <button 
+            @click="setPredictionMode('weekly')"
+            class="px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
+            :class="predictionMode === 'weekly' ? 'bg-gold-500 text-dark-900 shadow' : 'text-gray-400 hover:text-white'"
+          >
+            Mingguan (4 Minggu)
+          </button>
+        </div>
+
+        <!-- Slider Hari/Minggu Prediksi -->
         <div v-if="predictions.length > 0" class="flex items-center gap-3 bg-dark-800 rounded-lg px-3 py-1.5 border border-dark-700">
           <label class="text-xs text-gray-400 font-medium whitespace-nowrap">Tampilkan:</label>
           <input type="range" v-model="selectedDays" min="1" :max="predictions.length" class="w-20 accent-gold-500" />
-          <span class="text-xs text-gold-500 font-bold w-12">{{ selectedDays }} Hari</span>
+          <span class="text-xs text-gold-500 font-bold w-16">{{ selectedDays }} {{ predictionMode === 'daily' ? 'Hari' : 'Minggu' }}</span>
         </div>
 
         <!-- Toggle Satuan Berat -->

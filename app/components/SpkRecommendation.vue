@@ -5,15 +5,21 @@ import { CheckCircle2, TrendingUp, TrendingDown, Minus, Loader2, AlertCircle } f
 
 const loading = ref(true)
 const error = ref<string | null>(null)
-const data = ref<any>(null)
+const dailyData = ref<any>(null)
+const weeklyData = ref<any>(null)
 const { formatPrice, convertPrice } = useCurrency()
 
 const fetchSpkData = async () => {
   try {
     loading.value = true
-    const response = await axios.get('https://render-capstone-project.onrender.com/predict-gold')
-    if (response.data.status === 'success') {
-      data.value = response.data
+    error.value = null
+    const [dailyRes, weeklyRes] = await Promise.all([
+      axios.get('https://render-capstone-project.onrender.com/predict-gold-daily'),
+      axios.get('https://render-capstone-project.onrender.com/predict-gold-weekly')
+    ])
+    if (dailyRes.data.status === 'success' && weeklyRes.data.status === 'success') {
+      dailyData.value = dailyRes.data
+      weeklyData.value = weeklyRes.data
     } else {
       error.value = 'Gagal memuat data SPK.'
     }
@@ -29,39 +35,61 @@ onMounted(() => {
 })
 
 const recommendation = computed(() => {
-  if (!data.value || !data.value.predictions_usd || data.value.predictions_usd.length === 0) return null
-  
-  const currentPriceRaw = data.value.input_data[data.value.input_data.length - 1].Close
-  const nextDayPredRaw = data.value.predictions_usd[0].value
-  const day7PredRaw = data.value.predictions_usd[6].value
-  
+  if (!dailyData.value || !weeklyData.value) return null
+  if (!dailyData.value.predictions?.length || !dailyData.value.input?.length) return null
+  if (!weeklyData.value.predictions?.length) return null
+
+  const currentPriceRaw = dailyData.value.input[dailyData.value.input.length - 1].value
+  const nextDayPredRaw = dailyData.value.predictions[0].value
+  const weeklyFuturePredRaw = weeklyData.value.predictions[weeklyData.value.predictions.length - 1].value
+
   const shortTermChange = ((nextDayPredRaw - currentPriceRaw) / currentPriceRaw) * 100
-  const longTermChange = ((day7PredRaw - currentPriceRaw) / currentPriceRaw) * 100
+  const longTermChange = ((weeklyFuturePredRaw - currentPriceRaw) / currentPriceRaw) * 100
+
+  // Gunakan rekomendasi dari API jika tersedia
+  const spkDecision = dailyData.value.spk?.decision || null
+  const rawSpkExplanation = dailyData.value.spk?.ai_explanation || null
   
+  // Deteksi jika penjelasan dari API adalah pesan error quota/limit
+  const isErrorExplanation = (text: string | null): boolean => {
+    if (!text) return true
+    const lower = text.toLowerCase()
+    return lower.includes('429') || 
+           lower.includes('quota') || 
+           lower.includes('exceeded') || 
+           lower.includes('generative ai') || 
+           lower.includes('error') || 
+           lower.includes('rate limit')
+  }
+  
+  const spkExplanation = isErrorExplanation(rawSpkExplanation) ? null : rawSpkExplanation
+
   let action = 'TAHAN'
   let color = 'text-gold-500'
   let bg = 'bg-gold-500/10'
   let border = 'border-gold-500/30'
   let icon = Minus
-  let reason = 'Pasar menunjukkan sinyal campuran atau perubahan kecil. Sebaiknya pertahankan posisi asetmu saat ini.'
+  let reason = spkExplanation || 'Pasar menunjukkan sinyal campuran atau perubahan kecil. Sebaiknya pertahankan posisi asetmu saat ini.'
 
-  if (shortTermChange > 0.5 && longTermChange > 1.0) {
+  const decision = spkDecision || (
+    shortTermChange > 0.5 && longTermChange > 1.0 ? 'BUY' :
+    shortTermChange < -0.5 && longTermChange < -1.0 ? 'SELL' : 'HOLD'
+  )
+
+  if (decision === 'BUY') {
     action = 'BELI'
     color = 'text-green-400'
     bg = 'bg-green-500/10'
     border = 'border-green-500/30'
     icon = TrendingUp
-    reason = 'Momentum naik yang kuat terdeteksi dalam proyeksi jangka pendek dan 7 hari ke depan. Titik masuk yang sangat menguntungkan.'
-  } else if (shortTermChange < -0.5 && longTermChange < -1.0) {
+    if (!spkExplanation) reason = 'Momentum naik yang kuat terdeteksi dalam proyeksi jangka pendek dan mingguan. Titik masuk yang sangat menguntungkan.'
+  } else if (decision === 'SELL') {
     action = 'JUAL'
     color = 'text-red-400'
     bg = 'bg-red-500/10'
     border = 'border-red-500/30'
     icon = TrendingDown
-    reason = 'Tren penurunan diprediksi di berbagai jangka waktu. Pertimbangkan untuk mengambil untung sekarang atau memotong kerugian (cut loss).'
-  } else if (shortTermChange > 0 && longTermChange < 0) {
-    action = 'TAHAN'
-    reason = 'Keuntungan jangka pendek diharapkan, tetapi tren jangka panjang cenderung menurun (bearish). Lanjutkan dengan hati-hati.'
+    if (!spkExplanation) reason = 'Tren penurunan diprediksi di berbagai jangka waktu. Pertimbangkan untuk mengambil untung sekarang atau memotong kerugian (cut loss).'
   }
 
   return {
@@ -73,7 +101,7 @@ const recommendation = computed(() => {
     reason,
     currentPriceRaw,
     nextDayPredRaw,
-    day7PredRaw,
+    weeklyFuturePredRaw,
     shortTermChange,
     longTermChange
   }
@@ -132,9 +160,9 @@ const recommendation = computed(() => {
         </div>
 
         <div class="bg-dark-800 border border-dark-700 rounded-lg p-4 md:col-span-2">
-          <p class="text-sm text-gray-400 mb-1">Proyeksi 7 Hari</p>
+          <p class="text-sm text-gray-400 mb-1">Proyeksi Mingguan (4 Minggu)</p>
           <div class="flex items-end gap-2">
-            <p class="text-2xl font-bold text-white break-words">{{ formatPrice(recommendation.day7PredRaw) }}</p>
+            <p class="text-2xl font-bold text-white break-words">{{ formatPrice(recommendation.weeklyFuturePredRaw) }}</p>
             <span class="text-sm mb-1 font-medium shrink-0" :class="recommendation.longTermChange >= 0 ? 'text-green-400' : 'text-red-400'">
               {{ recommendation.longTermChange > 0 ? '+' : '' }}{{ recommendation.longTermChange.toFixed(2) }}%
             </span>

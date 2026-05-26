@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { TrendingUp, ArrowUpRight, DollarSign } from '@lucide/vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { TrendingUp, TrendingDown, ArrowUpRight, DollarSign } from '@lucide/vue'
 
 definePageMeta({
   layout: 'dashboard'
@@ -7,6 +9,44 @@ definePageMeta({
 
 const auth = useAuth()
 const { formatPrice } = useCurrency()
+
+const currentPrice = ref<number>(4542.20)
+const futurePrice = ref<number>(4548.77)
+const changePercentage = ref<number>(0.22)
+const isPositiveChange = ref<boolean>(true)
+const projectionPercentage = ref<number>(0.14)
+const isPositiveProjection = ref<boolean>(true)
+
+const fetchDashboardData = async () => {
+  try {
+    const response = await axios.get('https://render-capstone-project.onrender.com/predict-gold-daily')
+    if (response.data.status === 'success') {
+      const spk = response.data.spk
+      const input = response.data.input
+      
+      if (spk) {
+        currentPrice.value = spk.current_price
+        futurePrice.value = spk.future_price
+        projectionPercentage.value = spk.percentage_change
+        isPositiveProjection.value = spk.percentage_change >= 0
+      }
+      
+      if (input && input.length >= 2) {
+        const todayPrice = input[input.length - 1].value
+        const yesterdayPrice = input[input.length - 2].value
+        const delta = ((todayPrice - yesterdayPrice) / yesterdayPrice) * 100
+        changePercentage.value = delta
+        isPositiveChange.value = delta >= 0
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch dashboard summary data:', error)
+  }
+}
+
+onMounted(() => {
+  fetchDashboardData()
+})
 </script>
 
 <template>
@@ -17,41 +57,48 @@ const { formatPrice } = useCurrency()
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="card p-6 border-l-4 border-l-gold-500">
+      <!-- Card Harga Saat Ini -->
+      <div class="card p-6 border-l-4 border-l-gold-500 bg-dark-800 border-dark-700">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-sm font-medium text-gray-400 mb-1">Harga Saat Ini</p>
-            <h3 class="text-2xl font-bold text-white break-words">{{ formatPrice(4500.70) }}</h3>
+            <h3 class="text-2xl font-bold text-white break-words">{{ formatPrice(currentPrice) }}</h3>
           </div>
           <div class="p-2 bg-gold-500/10 rounded-lg">
             <DollarSign class="w-5 h-5 text-gold-500" />
           </div>
         </div>
         <div class="mt-4 flex items-center text-sm">
-          <TrendingUp class="w-4 h-4 text-green-400 mr-1" />
-          <span class="text-green-400 font-medium">+1.2%</span>
+          <component :is="isPositiveChange ? TrendingUp : TrendingDown" class="w-4 h-4 mr-1" :class="isPositiveChange ? 'text-green-400' : 'text-red-400'" />
+          <span class="font-medium" :class="isPositiveChange ? 'text-green-400' : 'text-red-400'">
+            {{ isPositiveChange ? '+' : '' }}{{ changePercentage.toFixed(2) }}%
+          </span>
           <span class="text-gray-500 ml-2">dari kemarin</span>
         </div>
       </div>
       
-      <div class="card p-6 border-l-4 border-l-blue-500">
+      <!-- Card Target Proyeksi -->
+      <div class="card p-6 border-l-4 border-l-blue-500 bg-dark-800 border-dark-700">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-sm font-medium text-gray-400 mb-1">Target 7 Hari</p>
-            <h3 class="text-2xl font-bold text-white break-words">{{ formatPrice(4582.63) }}</h3>
+            <h3 class="text-2xl font-bold text-white break-words">{{ formatPrice(futurePrice) }}</h3>
           </div>
           <div class="p-2 bg-blue-500/10 rounded-lg">
             <ArrowUpRight class="w-5 h-5 text-blue-500" />
           </div>
         </div>
         <div class="mt-4 flex items-center text-sm">
-          <TrendingUp class="w-4 h-4 text-green-400 mr-1" />
-          <span class="text-green-400 font-medium">+1.82%</span>
+          <component :is="isPositiveProjection ? TrendingUp : TrendingDown" class="w-4 h-4 mr-1" :class="isPositiveProjection ? 'text-green-400' : 'text-red-400'" />
+          <span class="font-medium" :class="isPositiveProjection ? 'text-green-400' : 'text-red-400'">
+            {{ isPositiveProjection ? '+' : '' }}{{ projectionPercentage.toFixed(2) }}%
+          </span>
           <span class="text-gray-500 ml-2">proyeksi pertumbuhan</span>
         </div>
       </div>
 
-      <div class="card p-6 border-l-4 border-l-green-500 bg-gradient-to-br from-dark-800 to-green-900/20">
+      <!-- Card Status AI -->
+      <div class="card p-6 border-l-4 border-l-green-500 bg-gradient-to-br from-dark-800 to-green-900/20 border-dark-700">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-sm font-medium text-green-400/80 mb-1">Status Sistem AI</p>
