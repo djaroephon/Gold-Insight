@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Coins, LogIn, Loader2, Eye, EyeOff } from '@lucide/vue'
+import { LogIn, Loader2, Eye, EyeOff } from '@lucide/vue'
 
 definePageMeta({
   layout: 'default'
@@ -39,8 +39,8 @@ const handleLogin = async () => {
     
     <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
       <div class="flex justify-center">
-        <div class="p-3 bg-gold-500/10 rounded-2xl border border-gold-500/20">
-          <Coins class="w-12 h-12 text-gold-500" />
+        <div class="p-4 bg-gradient-to-b from-gold-500/20 to-transparent rounded-full border border-gold-500/20 shadow-[0_0_50px_rgba(212,175,55,0.15)] flex items-center justify-center backdrop-blur-sm transition-all duration-500 hover:border-gold-500/40 hover:shadow-[0_0_60px_rgba(212,175,55,0.25)] hover:scale-[1.03]">
+          <img src="@/assets/images/logo.png" alt="Gold Insight Logo" class="h-40 w-40 object-contain drop-shadow-[0_0_20px_rgba(255,215,0,0.35)]" />
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-white">

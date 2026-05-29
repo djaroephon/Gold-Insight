@@ -130,7 +130,7 @@ const recommendation = computed(() => {
 
     <div v-else-if="recommendation" class="flex-1 flex flex-col lg:flex-row gap-6 items-start">
       <div 
-        class="w-full lg:w-1/3 rounded-xl border p-6 flex flex-col items-center justify-center text-center h-full transition-colors duration-300"
+        class="w-full lg:w-1/3 rounded-xl border p-6 flex flex-col items-center justify-center text-center lg:self-stretch transition-colors duration-300"
         :class="[recommendation.bg, recommendation.border]"
       >
         <p class="text-sm text-gray-400 uppercase tracking-widest mb-2">Sistem Menyarankan</p>
