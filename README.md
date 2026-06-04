@@ -43,7 +43,7 @@ Platform ini dirancang dengan berbagai fitur untuk memudahkan analisis dan inves
 Aplikasi ini dibangun menggunakan arsitektur web modern yang menjamin performa tinggi, skalabilitas, dan pengalaman pengguna (*User Experience*) terbaik.
 
 ### Frontend
-* **[Nuxt 4](https://nuxt.com/)** - *The Intuitive Vue Framework* untuk SSR dan arsitektur aplikasi yang tangguh.
+* **[Nuxt ](https://nuxt.com/)** - *The Intuitive Vue Framework* untuk SSR dan arsitektur aplikasi yang tangguh.
 * **[Vue 3](https://vuejs.org/)** - *Progressive JavaScript Framework* dengan *Composition API*.
 * **[Tailwind CSS v4](https://tailwindcss.com/)** - *Utility-first CSS framework* untuk desain antarmuka yang responsif dan modern.
 
@@ -122,5 +122,5 @@ Hak cipta dilindungi. Silakan merujuk pada file `LICENSE` yang disertakan di rep
 
 <div align="center">
   <br/>
-  <i>Dibuat dengan ❤️ oleh Tim Gold Insight</i>
+  <i>Dibuat dengan oleh ANAK EMAS</i>
 </div>
