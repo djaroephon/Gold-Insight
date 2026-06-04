@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Coins, LogIn, LogOut, LayoutDashboard, Globe, Menu, X } from '@lucide/vue'
+import { Coins, LogIn, LogOut, LayoutDashboard, Globe, Menu, X, User } from '@lucide/vue'
 
 const auth = useAuth()
 const { currency, toggleCurrency } = useCurrency()
@@ -50,6 +50,10 @@ const handleLogout = () => {
             <LayoutDashboard class="w-4 h-4" />
             <span>Dasbor</span>
           </NuxtLink>
+          <NuxtLink to="/profile" class="btn-outline flex items-center gap-2 py-1.5 text-sm">
+            <User class="w-4 h-4" />
+            <span>Profil</span>
+          </NuxtLink>
           <button @click="handleLogout" class="text-gray-400 hover:text-red-400 transition-colors p-2 cursor-pointer" title="Keluar">
             <LogOut class="w-5 h-5" />
           </button>
@@ -98,6 +102,10 @@ const handleLogout = () => {
             <NuxtLink to="/dashboard" @click="isMobileMenuOpen = false" class="btn-outline w-full flex items-center justify-center gap-2 py-2.5 text-sm">
               <LayoutDashboard class="w-4 h-4" />
               <span>Kembali Ke Dasbor</span>
+            </NuxtLink>
+            <NuxtLink to="/profile" @click="isMobileMenuOpen = false" class="btn-outline w-full flex items-center justify-center gap-2 py-2.5 text-sm">
+              <User class="w-4 h-4" />
+              <span>Profil Saya</span>
             </NuxtLink>
             <button @click="handleLogout(); isMobileMenuOpen = false" class="w-full btn-outline border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center justify-center gap-2 py-2.5 text-sm cursor-pointer">
               <LogOut class="w-4 h-4" />
