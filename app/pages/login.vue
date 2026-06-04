@@ -10,18 +10,22 @@ const auth = useAuth()
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const rememberMe = ref(false)
+const isForgotPassword = ref(false)
 const loading = ref(false)
 
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const handleLogin = async () => {
   loading.value = true
   errorMessage.value = ''
+  successMessage.value = ''
   
   const result = await auth.login({
     email: email.value,
     password: password.value
-  })
+  }, rememberMe.value)
   
   loading.value = false
   
@@ -29,6 +33,31 @@ const handleLogin = async () => {
     navigateTo('/dashboard')
   } else {
     errorMessage.value = result.message || 'Login gagal, periksa kembali email dan password.'
+  }
+}
+
+const handleForgotPassword = async () => {
+  if (!email.value) {
+    errorMessage.value = 'Silakan masukkan alamat email kamu.'
+    return
+  }
+
+  loading.value = true
+  errorMessage.value = ''
+  successMessage.value = ''
+
+  const result = await auth.forgotPassword(email.value)
+
+  loading.value = false
+
+  if (result.success) {
+    successMessage.value = result.message
+    setTimeout(() => {
+      isForgotPassword.value = false
+      successMessage.value = ''
+    }, 3000)
+  } else {
+    errorMessage.value = result.message || 'Gagal mengirim permintaan reset kata sandi.'
   }
 }
 </script>
@@ -44,16 +73,17 @@ const handleLogin = async () => {
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
-        Selamat Datang Kembali
+        {{ isForgotPassword ? 'Lupa Kata Sandi' : 'Selamat Datang Kembali' }}
       </h2>
       <p class="mt-2 text-center text-sm text-gray-400">
-        Masuk untuk mengakses dasbor dan rekomendasi AI kamu.
+        {{ isForgotPassword ? 'Masukkan email kamu untuk mereset kata sandi.' : 'Masuk untuk mengakses dasbor dan rekomendasi AI kamu.' }}
       </p>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
       <div class="bg-dark-800 py-8 px-4 shadow-xl sm:rounded-xl sm:px-10 border border-dark-700">
-        <form class="space-y-6" @submit.prevent="handleLogin">
+        <!-- FORM LOGIN -->
+        <form v-if="!isForgotPassword" class="space-y-6" @submit.prevent="handleLogin">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-300">
               Alamat Email
@@ -100,14 +130,14 @@ const handleLogin = async () => {
 
           <div class="flex items-center justify-between">
             <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-gold-500 focus:ring-gold-500 border-gray-700 rounded bg-dark-900" />
+              <input id="remember-me" name="remember-me" type="checkbox" v-model="rememberMe" class="h-4 w-4 text-gold-500 focus:ring-gold-500 border-gray-700 rounded bg-dark-900" />
               <label for="remember-me" class="ml-2 block text-sm text-gray-400">
                 Ingat saya
               </label>
             </div>
 
             <div class="text-sm">
-              <a href="#" class="font-medium text-gold-500 hover:text-gold-400">
+              <a href="#" @click.prevent="isForgotPassword = true; errorMessage = ''; successMessage = ''" class="font-medium text-gold-500 hover:text-gold-400">
                 Lupa kata sandi?
               </a>
             </div>
@@ -133,9 +163,62 @@ const handleLogin = async () => {
           <div v-if="errorMessage" class="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm text-center">
             {{ errorMessage }}
           </div>
+          <div v-if="successMessage" class="p-3 bg-green-500/10 border border-green-500/50 rounded-lg text-green-500 text-sm text-center">
+            {{ successMessage }}
+          </div>
         </form>
 
-        <div class="mt-6 text-center">
+        <!-- FORM LUPA PASSWORD -->
+        <form v-else class="space-y-6" @submit.prevent="handleForgotPassword">
+          <div>
+            <label for="reset-email" class="block text-sm font-medium text-gray-300">
+              Alamat Email
+            </label>
+            <div class="mt-1">
+              <input 
+                id="reset-email" 
+                name="email" 
+                type="email" 
+                autocomplete="email" 
+                required 
+                v-model="email"
+                class="input-field" 
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <button 
+              type="submit" 
+              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-dark-900 bg-gold-500 hover:bg-gold-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-900 focus:ring-gold-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              :disabled="loading"
+            >
+              <template v-if="loading">
+                <Loader2 class="w-5 h-5 animate-spin mr-2" />
+                Memproses...
+              </template>
+              <template v-else>
+                Kirim Tautan Reset
+              </template>
+            </button>
+          </div>
+
+          <div class="text-sm text-center">
+            <a href="#" @click.prevent="isForgotPassword = false; errorMessage = ''; successMessage = ''" class="font-medium text-gold-500 hover:text-gold-400">
+              Kembali ke Login
+            </a>
+          </div>
+
+          <div v-if="errorMessage" class="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm text-center">
+            {{ errorMessage }}
+          </div>
+          <div v-if="successMessage" class="p-3 bg-green-500/10 border border-green-500/50 rounded-lg text-green-500 text-sm text-center">
+            {{ successMessage }}
+          </div>
+        </form>
+
+        <div v-if="!isForgotPassword" class="mt-6 text-center">
           <p class="text-sm text-gray-400">
             Belum punya akun?
             <NuxtLink to="/register" class="font-medium text-gold-500 hover:text-gold-400">

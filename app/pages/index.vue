@@ -13,12 +13,12 @@ definePageMeta({
 
 // Data Tim 
 const teamMembers = [
-  { id: 1, name: 'Vina Widiasari', role: 'Data Scientist', univ: 'Universitas Jenderal Soedirman', image: vina, website: 'https://github.com/vinawidiasari', instagram: 'https://www.instagram.com/vnn.aaa/', linkedin: 'www.linkedin.com/in/vina-widiasari' },
-  { id: 2, name: 'Djaroephon Djohan Syuhada', role: 'Fullstack Developer', univ: 'Universitas Ubudiyah Indonesia', image: djohan, website: 'https://zettia.my.id/', instagram: 'https://www.instagram.com/djaroephon.1746/', linkedin: 'www.linkedin.com/in/djaroephon-djohan-syuhada' },
+  { id: 1, name: 'Vina Widiasari', role: 'Data Scientist', univ: 'Universitas Jenderal Soedirman', image: vina, website: 'https://github.com/vinawidiasari', instagram: 'https://www.instagram.com/vnn.aaa/', linkedin: 'https://www.linkedin.com/in/vina-widiasari' },
+  { id: 2, name: 'Djaroephon Djohan Syuhada', role: 'Fullstack Developer', univ: 'Universitas Ubudiyah Indonesia', image: djohan, website: 'https://zettia.my.id/', instagram: 'https://www.instagram.com/djaroephon.1746/', linkedin: 'https://www.linkedin.com/in/djaroephon-djohan-syuhada' },
   { id: 3, name: 'Nurvita Win Pratiwi', role: 'AI Engineer', univ: 'Universitas Jenderal Soedirman', image: vita, website: '#', instagram: 'https://www.instagram.com/nurvitawpr?igsh=MWNoZTY3OHluamtkZg==', linkedin: 'https://www.linkedin.com/in/nurvita-win-pratiwi-579b082b3 ' },
   { id: 4, name: 'Sabia Putri Aulia', role: 'Data Scientist', univ: 'Universitas Jenderal Soedirman', image: sabia, website: 'https://github.com/sabibu12', instagram: 'https://www.instagram.com/_ptrs95?igsh=cDZvcTlveDdhenQ3', linkedin: 'https://www.linkedin.com/in/sabia-putri-aulia-b8615a3ab?' },
-  { id: 5, name: 'Nabil Aditia Putra', role: 'Fullstack Developer', univ: 'Universitas Serambi Mekkah', image: nabil, website: 'https://nvitech.meukarya.my.id/', instagram:'https://www.instagram.com/nabildtya', linkedin: 'https://www.linkedin.com/in/nabiladitiaputra/' },
-  { id: 6, name: 'Anggi Nur Pratama', role: 'AI Engineer', univ: 'Universitas Jenderal Soedirman', image: anggi, website: 'https://github.com/hellohopes', instagram: 'https://www.instagram.com/anggipratmaa', linkedin: 'https://www.linkedin.com/in/anggi-nur-pratama/' }
+  { id: 5, name: 'Nabil Aditia Putra', role: 'Fullstack Developer', univ: 'Universitas Serambi Mekkah', image: nabil, website: 'https://nvitech.meukarya.my.id/', instagram:'https://www.instagram.com/nabildtya', linkedin: 'https://www.linkedin.com/in/nabiladitiaputra' },
+  { id: 6, name: 'Anggi Nur Pratama', role: 'AI Engineer', univ: 'Universitas Jenderal Soedirman', image: anggi, website: 'https://github.com/hellohopes', instagram: 'https://www.instagram.com/anggipratmaa', linkedin: 'https://www.linkedin.com/in/anggi-nur-pratama' }
 ]
 </script>
 
